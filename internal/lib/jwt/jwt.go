@@ -14,10 +14,10 @@ func GenerateToken(user models.User, app models.App, duration time.Duration) (st
 	claims["exp"] = time.Now().Add(duration).Unix()
 	claims["appId"] = app.AppId
 
-	tokenStrign, err := token.SignedString([]byte(app.Secret))
+	tokenString, err := token.SignedString([]byte(app.Secret))
 	if err != nil {
 		return "", err
 	}
 
-	return tokenStrign, nil
+	return tokenString, nil
 }

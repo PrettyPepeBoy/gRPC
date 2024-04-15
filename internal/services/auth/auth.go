@@ -119,7 +119,7 @@ func (a *Auth) Login(ctx context.Context, email string, password string, appId i
 	return token, nil
 }
 
-func (a *Auth) IsAdmin(ctx context.Context, userID int64) (bool, error) {
+func (a *Auth) IsItAdmin(ctx context.Context, userID int64) (bool, error) {
 	const op = "auth/IsAdmin"
 
 	log := a.log.With(

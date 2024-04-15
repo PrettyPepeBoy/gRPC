@@ -59,6 +59,27 @@ func TestRegisterLogin_Login_HappyPath(t *testing.T) {
 	assert.InDelta(t, loginTime.Add(st.Cfg.TokenTTL).Unix(), claims["exp"].(float64), deltaSeconds)
 }
 
+func TestItIsAdmin(t *testing.T) {
+	ctx, st := suite.New(t)
+	email := gofakeit.Email()
+	password := randomFakePassword()
+
+	idResp, err := st.AuthClient.Register(ctx, &ssov1.RegisterRequest{
+		Email:    email,
+		Password: password,
+	})
+
+	require.NoError(t, err)
+	assert.NotEmpty(t, idResp.GetUserId())
+
+	adminResp, err := st.AuthClient.IsItAdmin(ctx, &ssov1.IsItAdminRequest{
+		UserId: idResp.GetUserId(),
+	})
+
+	require.NoError(t, err)
+	assert.True(t, !adminResp.GetIsAdmin())
+}
+
 func randomFakePassword() string {
 	return gofakeit.Password(true, true, true, true, false, passDefaultLen)
 }

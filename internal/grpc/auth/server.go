@@ -11,7 +11,7 @@ import (
 type Auth interface {
 	Login(ctx context.Context, email, password string, appId int32) (token string, err error)
 	RegisterNewUser(ctx context.Context, email, password string) (userId int64, err error)
-	IsAdmin(ctx context.Context, userId int64) (isAdmin bool, err error)
+	IsItAdmin(ctx context.Context, userId int64) (isAdmin bool, err error)
 }
 type serverAPI struct {
 	ssov1.UnimplementedAuthServer
@@ -60,15 +60,15 @@ func (s *serverAPI) Register(ctx context.Context, req *ssov1.RegisterRequest) (*
 	}, nil
 }
 
-func (s *serverAPI) IsAdmin(ctx context.Context, req *ssov1.IsAdminRequest) (*ssov1.IsAdminResponse, error) {
+func (s *serverAPI) IsItAdmin(ctx context.Context, req *ssov1.IsItAdminRequest) (*ssov1.IsItAdminResponse, error) {
 	if req.GetUserId() == 0 {
 		return nil, status.Error(codes.InvalidArgument, "invalid Id")
 	}
-	ok, err := s.auth.IsAdmin(ctx, req.UserId)
+	ok, err := s.auth.IsItAdmin(ctx, req.UserId)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal problem")
 	}
-	return &ssov1.IsAdminResponse{
+	return &ssov1.IsItAdminResponse{
 		IsAdmin: ok,
 	}, nil
 }
